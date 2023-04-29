@@ -18,7 +18,7 @@
 	<meta property="og:type" content="article" />
 
     <!-- Website Title -->
-    <title>Corso - Training Course Landing Page Template</title>
+    <title>sosotech - sosotechnologies - sosotechnology</title>
     
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,600,700,700i&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
 	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 	
 	<!-- Favicon  -->
-    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/sosotech_official_logo.jpg') }}">
 </head>
 <body data-spy="scroll" data-target=".fixed-top">
     
@@ -51,7 +51,7 @@
         <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Corso</a> -->
 
         <!-- Image Logo -->
-        <a class="navbar-brand logo-image" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo.svg') }}" alt="alternative"></a> 
+        <a style="text-decoration: none;" class="navbar-brand logo-image" href="{{ url_for('index') }}"><h3 style="color: orangered;">sosotech</h3></a> 
         
         <!-- Mobile Menu Toggle Button -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,13 +103,28 @@
         </div>
     </nav> <!-- end of navbar -->
     <!-- end of navigation -->
-
+    
 
     <!-- Header -->
     <header id="header" class="header">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
+                    <!----Flash messages------>
+                    {% block message %}
+                    <div>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class=flashes>
+                            {% for message in messages %}
+                            <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    {% endblock %}
+                    <!----end of flash messages---->
                     <div class="text-container">
                         <div class="countdown">
                             <span id="clock"></span>
@@ -192,32 +207,20 @@
 
                     <!-- Registration Form -->
                     <div class="form-container">
-                        <form id="registrationForm" data-toggle="validator" data-focus="false">
-                            <div class="form-group">
-                                <input type="text" class="form-control-input" id="rname" name="rname" required>
-                                <label class="label-control" for="rname">Complete name</label>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control-input" id="remail" name="remail" required>
-                                <label class="label-control" for="remail">Email address</label>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control-input" id="rphone" name="rphone" required>
-                                <label class="label-control" for="rphone">Phone number</label>
-                                <div class="help-block with-errors"></div>
-                            </div>
+                        {% from '_formhelpers.html' import render_field %}
+                        {% include '_messages.html' %}
+                        <form id="registerForm" action="{{url_for('index')}}" method="post">
+                            {{ form.csrf_token }}
+                            {{ render_field(form.fullname, class="form-control")}}
+                            {{ render_field(form.phone, class="form-control")}}
+                            {{ render_field(form.email, class="form-control")}}
+                            {{ render_field(form.city_country, class="form-control")}}
                             <div class="form-group checkbox">
-                                <input type="checkbox" id="rterms" value="Agreed-to-Terms" name="rterms" required>I've read and agree to Corso's written <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms & Conditions</a>
+                                <input type="checkbox" required>I've read and agree to Corso's written <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms & Conditions</a>
                                 <div class="help-block with-errors"></div>
                             </div>
-                            <div class="form-group">
-                                <button type="submit" class="form-control-submit-button">REGISTER</button>
-                            </div>
-                            <div class="form-message">
-                                <div id="rmsgSubmit" class="h3 text-center hidden"></div>
-                            </div>
+                            {{ form.submit(class="btn btn-lg btn-info w-100")}}
+                            
                         </form>
                     </div> <!-- end of form-container -->
                     <!-- end of registration form -->
@@ -462,7 +465,7 @@
 
 
     <!-- Date -->
-    <div id="date" class="basic-5">
+    <div id="date" class="basic-5 mb-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -479,7 +482,7 @@
 
 
     <!-- Contact -->
-    <div id="contact" class="form-3">
+    <div id="contact" class="form-3 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
