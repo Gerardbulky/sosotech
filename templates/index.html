@@ -46,6 +46,7 @@
     
 
     <!-- Navigation -->
+    {% block navigation %}
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
 
         <!-- Text Logo - Use this if you don't have a graphic logo -->
@@ -89,13 +90,13 @@
             </ul>
             <span class="nav-item social-icons">
                 <span class="fa-stack">
-                    <a href="#">
+                    <a href="{{ url_for('logout') }}">
                         <i class="fas fa-circle fa-stack-2x"></i>
                         <i class="fab fa-facebook-f fa-stack-1x"></i>
                     </a>
                 </span>
                 <span class="fa-stack">
-                    <a href="#">
+                    <a href="{{ url_for('login') }}">
                         <i class="fas fa-circle fa-stack-2x"></i>
                         <i class="fab fa-twitter fa-stack-1x"></i>
                     </a>
@@ -103,10 +104,12 @@
             </span>
         </div>
     </nav> <!-- end of navbar -->
+    {% endblock %}
     <!-- end of navigation -->
     
 
     <!-- Header -->
+    {% block header %}
     <header id="header" class="header">
         <div class="container">
             <div class="row">
@@ -177,10 +180,12 @@
         <!-- end of image slider -->
 
     </header> <!-- end of header -->
+    {% endblock %}
     <!-- end of header -->
 
 
     <!-- Registration -->
+    {% block registration %}
     <div id="register" class="form-1">
         <div class="container">
             <div class="row">
@@ -230,10 +235,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of form-1 -->
+    {% endblock %}
     <!-- end of registration -->
 
 
     <!-- Partners -->
+    {% block slider %}
     <div class="slider-1">
         <div class="container">
             <div class="row">
@@ -280,10 +287,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of slider-1 -->
+    {% endblock %}
     <!-- end of partners -->
 
 
     <!-- Instructor -->
+    {% block instruction %}
     <div id="instructor" class="basic-1">
         <div class="container">
             <div class="row">
@@ -300,6 +309,7 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-1 -->
+    {% endblock %}
     <!-- end of instructor -->
 
 
@@ -307,6 +317,7 @@
 
 
     <!-- Students -->
+    {% block students %}
     <div class="basic-3">
         <div class="container">
             <div class="row">
@@ -323,10 +334,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-3 -->
+    {% endblock %}
     <!-- end of students -->
 
 
     <!-- Details Lightbox -->
+    {% block lightbox %}
 	<div id="details-lightbox" class="lightbox-basic zoom-anim-dialog mfp-hide">
         <div class="container">
             <div class="row">
@@ -366,10 +379,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of lightbox-basic -->
+    {% endblock %}
     <!-- end of details lightbox -->
 
 
     <!-- Video -->
+    {% block video %}
     <div class="basic-4">
         <div class="container">
             <div class="row">
@@ -393,10 +408,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-4 -->
+    {% endblock %}
     <!-- end of video -->
 
 
     <!-- Testimonials -->
+    {% block testimonials %}
     <div class="slider-2">
         <div class="container">
             <div class="row">
@@ -471,10 +488,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of slider-2 -->
+    {% endblock %}
     <!-- end of testimonials -->
 
 
     <!-- Date -->
+    {% block date %}
     <div id="date" class="basic-5 mb-5">
         <div class="container">
             <div class="row">
@@ -488,10 +507,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-5 -->
+    {% endblock %}
     <!-- end of date -->
 
 
     <!-- Contact -->
+    {% block contact %}
     <div id="contact" class="form-3 mt-5">
         <div class="container">
             <div class="row">
@@ -552,10 +573,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of form-3 -->
+    {% endblock %}
     <!-- end of contact -->
 
 
     <!-- Footer -->
+    {% block footer %}
     <div class="footer">
         <div class="container">
             <div class="row">
@@ -630,10 +653,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of footer -->  
+    {% endblock %}
     <!-- end of footer -->
 
 
     <!-- Copyright -->
+    {% block copyright %}
     <div class="copyright">
         <div class="container">
             <div class="row">
@@ -643,7 +668,8 @@
                 </div> <!-- end of col -->
             </div> <!-- enf of row -->
         </div> <!-- end of container -->
-    </div> <!-- end of copyright --> 
+    </div> <!-- end of copyright -->
+    {% endblock %} 
     <!-- end of copyright -->
     
     	

@@ -58,10 +58,9 @@ body {
 .login form input[type="password"], .login form input[type="text"], .login form input[type="email"], .register form input[type="password"], .register form input[type="text"], .register form input[type="email"] {
     width: 250px;
     height: 38px;
-    border: 1px solid #dee0e4;
+    border: 1px solid #00040c;
     margin-bottom: 20px;
     padding: 0px;
-    z-index: 1;
     margin-left: -20px;
     
 }
@@ -147,4 +146,15 @@ body.loggedin {
 .content > div p {
   padding: 5px;
   margin: 0 0 10px 0;
+}
+
+/* My changes */
+.danger {
+    color: red;
+    text-align: center;
+}
+
+.success {
+    color: green;
+    text-align: center;
 }

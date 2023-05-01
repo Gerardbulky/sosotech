@@ -19,11 +19,23 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI"
 db = SQLAlchemy(app) 
 bcrypt = Bcrypt(app)
 
-class Register(db.Model):
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view='login'
+login_manager.needs_refresh_message_category='danger'
+login_manager.login_message = u"Please login first"
+
+
+
+@login_manager.user_loader
+def user_loader(user_id):
+	return Register.query.get(user_id)
+
+class Register(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key= True)
     email = db.Column(db.String(50), unique= True, nullable=False)
-    password = db.Column(db.String(200), unique= False, nullable=False)
-    confirm = db.Column(db.String(200), unique= False, nullable=False)
+    password = db.Column(db.String(200), unique= True, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
@@ -33,18 +45,6 @@ with app.app_context():
     db.create_all()
 
 
-class Login(db.Model):
-    id = db.Column(db.Integer, primary_key= True)
-    email = db.Column(db.String(50), unique= True, nullable=False)
-    password = db.Column(db.String(200), unique= False, nullable=False)
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<Login %r>' % self.email
-
-with app.app_context():
-    db.create_all()
-    
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,44 +85,53 @@ def register():
     email = None
     form = RegisterForm()
     if request.method == 'POST' and form.validate_on_submit():
-        email = Register.query.filter_by(email=form.email.data).first()
-        if not email:
+        email = Register.query.filter_by(email=form.email.data).first()  # We search the database if the email exits
+        if email:
             form = RegisterForm()
         else:
             hash_password = bcrypt.generate_password_hash(form.password.data)
             register_user = Register(email=form.email.data, password=hash_password)
             db.session.add(register_user)
             db.session.commit()
-        # Extrating username from email
-        extract_email = form.email.data.index("@")[0]
-        result = ""
-        for i in extract_email:
-            if i.isalpha():
-                result+=i
-        session["user"]= result
+        # # Extrating username from email
+        extract_username_from_email = form.email.data.strip()
+        extracted_username = extract_username_from_email[:extract_username_from_email.index('@')]
+        
+        session["user"]= extracted_username
+        form.email.data = ''
         form.password.data = ''
 
-        flash(f'Welcome {session["result"]} Thank you for registering!', 'success')
-        return redirect(url_for("register"))
-    flash("Email already exist", "danger")
+        flash(f'Welcome {session["user"]} Thank you for registering!', 'success')
+        return redirect(url_for("login"))
     return render_template("register.html", form=form, title="Registration Page")
-
 
 
 @app.route('/login/', methods=["GET", "POST"])
 def login():
-	form = LoginForm()
-	if request.method == "POST" and form.validate_on_submit():
-		email = Register.query.filter_by(email=form.email.data).first()
-        
-		if email and bcrypt.check_password_hash(email.password, form.password.data):
-			login_user(email)
-			flash(f"Hello {form.email.data.capitalize()}, You are login now!", "success")
-			next = request.args.get('next')
-			return redirect(next or url_for(".index"))
-		flash('Incorrect email or password', "danger")
-		return redirect(url_for('login'))
-	return render_template("login.html", form=form, title="Login Page")
+    form = LoginForm()
+    if request.method == "POST" and form.validate_on_submit():
+        user = Register.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data): 
+            login_user(user)
+            flash(f"Hello {form.email.data.capitalize()}, You are login now!", "success")
+            next = request.args.get('next')
+            return redirect(next or url_for(".profile"))
+        flash('Incorrect email or password', "danger")
+        return redirect(url_for('login'))
+    return render_template("login.html", form=form, title="Login Page")
+
+
+@app.route('/logout/')
+def logout():
+    logout_user()
+    flash('You are now sign out', "danger")
+    return redirect(url_for('.index'))
+
+
+@app.route('/profile/', methods=["GET", "POST"])
+@login_required
+def profile():
+	return render_template("profile.html", title="profile Page")
 
 
 

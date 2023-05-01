@@ -14,12 +14,10 @@ class UsersForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     email = StringField('', [validators.Email(), validators.DataRequired()])
-    password = PasswordField('', [validators.DataRequired(), validators.EqualTo('confirm', message=' Both password must match! ')])
-    confirm = PasswordField('', [validators.DataRequired()])
-    submit = SubmitField('Submit')
+    password = PasswordField('', [validators.DataRequired(), validators.EqualTo('confirms', message=' Both password must match! ')])
+    confirms = PasswordField('', [validators.DataRequired()])
 
 
 class LoginForm(FlaskForm):
     email = StringField('', [validators.Email(), validators.DataRequired()])
     password = PasswordField('', [validators.DataRequired()])
-    submit = SubmitField('Submit')
