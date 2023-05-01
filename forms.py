@@ -10,3 +10,16 @@ class UsersForm(FlaskForm):
     phone = StringField('Phone number ', [validators.DataRequired()])
     city_country = StringField('City & Country ', [validators.DataRequired()])
     submit = SubmitField('Submit')
+
+
+class RegisterForm(FlaskForm):
+    email = StringField('', [validators.Email(), validators.DataRequired()])
+    password = PasswordField('', [validators.DataRequired(), validators.EqualTo('confirm', message=' Both password must match! ')])
+    confirm = PasswordField('', [validators.DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class LoginForm(FlaskForm):
+    email = StringField('', [validators.Email(), validators.DataRequired()])
+    password = PasswordField('', [validators.DataRequired()])
+    submit = SubmitField('Submit')

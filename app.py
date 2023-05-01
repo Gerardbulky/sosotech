@@ -3,9 +3,10 @@ from flask import (
     Flask, flash, render_template, 
     redirect, request, session, url_for)
 from flask_sqlalchemy import SQLAlchemy
-from forms import UsersForm
+from forms import UsersForm, LoginForm, RegisterForm
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user, UserMixin
-
+from datetime import datetime
+from flask_bcrypt import Bcrypt
 
 if os.path.exists("env.py"):
     import env
@@ -15,9 +16,35 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
-db = SQLAlchemy(app)
+db = SQLAlchemy(app) 
+bcrypt = Bcrypt(app)
+
+class Register(db.Model):
+    id = db.Column(db.Integer, primary_key= True)
+    email = db.Column(db.String(50), unique= True, nullable=False)
+    password = db.Column(db.String(200), unique= False, nullable=False)
+    confirm = db.Column(db.String(200), unique= False, nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Register %r>' % self.email
+
+with app.app_context():
+    db.create_all()
 
 
+class Login(db.Model):
+    id = db.Column(db.Integer, primary_key= True)
+    email = db.Column(db.String(50), unique= True, nullable=False)
+    password = db.Column(db.String(200), unique= False, nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Login %r>' % self.email
+
+with app.app_context():
+    db.create_all()
+    
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,16 +80,49 @@ def index():
 
 
 
-@app.route('/admin')
-@login_required
-def admin():
-    if current_user.is_authenticated:
-        users_id = current_user.id
-        users = User.query.all()
-        return render_template('admin.html',users=users,users_id=users_id)
-    else:
-        username = current_user.username
-        return render_template('no_booking.html', username=username)
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    email = None
+    form = RegisterForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        email = Register.query.filter_by(email=form.email.data).first()
+        if not email:
+            form = RegisterForm()
+        else:
+            hash_password = bcrypt.generate_password_hash(form.password.data)
+            register_user = Register(email=form.email.data, password=hash_password)
+            db.session.add(register_user)
+            db.session.commit()
+        # Extrating username from email
+        extract_email = form.email.data.index("@")[0]
+        result = ""
+        for i in extract_email:
+            if i.isalpha():
+                result+=i
+        session["user"]= result
+        form.password.data = ''
+
+        flash(f'Welcome {session["result"]} Thank you for registering!', 'success')
+        return redirect(url_for("register"))
+    flash("Email already exist", "danger")
+    return render_template("register.html", form=form, title="Registration Page")
+
+
+
+@app.route('/login/', methods=["GET", "POST"])
+def login():
+	form = LoginForm()
+	if request.method == "POST" and form.validate_on_submit():
+		email = Register.query.filter_by(email=form.email.data).first()
+        
+		if email and bcrypt.check_password_hash(email.password, form.password.data):
+			login_user(email)
+			flash(f"Hello {form.email.data.capitalize()}, You are login now!", "success")
+			next = request.args.get('next')
+			return redirect(next or url_for(".index"))
+		flash('Incorrect email or password', "danger")
+		return redirect(url_for('login'))
+	return render_template("login.html", form=form, title="Login Page")
 
 
 
