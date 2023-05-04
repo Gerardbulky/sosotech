@@ -126,9 +126,50 @@ def index():
     return render_template("index.html", form=form)
 
 
-@app.route('/contact/')
+@app.route('/contact/', methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    form = UsersForm()
+    if request.method == "POST" and form.validate_on_submit():
+        email_already_exist = User.query.filter_by(email = form.email.data).first()
+        phone_already_exist = User.query.filter_by(phone = form.phone.data).first()
+
+        if email_already_exist or phone_already_exist:
+            flash('Email or Phone number already exits')
+            form = UsersForm()
+            return redirect(url_for('.index'))    
+        else:
+            fullname = form.fullname.data 
+            email = form.email.data 
+            phone = form.phone.data 
+            address = form.address.data 
+            city_country = form.city_country.data 
+            users_info = User(fullname=fullname, email=email, phone=phone,address=address, city_country=city_country)
+            db.session.add(users_info)
+            db.session.commit()
+
+    
+        message = (f"Hello {form.fullname.data.split(' ')[0]}! \n\n  This email is to confirm that, your application has been received successfully. "
+                        "Your information is as follows.  \n\n "
+                        "Full names: {} \n Email: {} \n Phone: {} \n Address: {} \n City and Country: {} \n\n"
+                        "If you have any questions, you can send us an email from the contact page. \n"
+                        "Thanks for your application and for believing in us! "
+                        "\n\n Best regards,  \n\n"
+                        "SosoTechnology. ").format(form.fullname.data, form.email.data, form.phone.data, form.address.data, form.city_country.data) 
+        # Encode the message string to UTF-8 encoding format
+        message = message.encode('utf-8')
+        server = smtplib.SMTP(os.environ.get("MAIL_SERVER"), os.environ.get("MAIL_PORT"))
+        server.starttls()
+        server.login(os.environ.get("MAIL_USERNAME"),os.environ.get("MAIL_PASSWORD"))
+        server.sendmail(os.environ.get("MAIL_USERNAME"), email, message)
+        
+        session['name'] = form.fullname.data 
+        email = '' 
+        phone = ''
+        address = ''
+        city_country = ''
+        flash(f"Thanks {session['name'].split(' ')[0]} for registering and email has been sent to you.", 'success')
+        return redirect('/')
+    return render_template("contact.html", form=form)
 
 
 

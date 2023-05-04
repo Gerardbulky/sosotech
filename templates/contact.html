@@ -1,101 +1,164 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>{% block title %}{% endblock %}</title>
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% extends 'index.html' %}
 
-	</head>
-	<body class="loggedin">
-		<nav class="navtop">
-			<div>
-				<h1><a style="font-size: x-large;" href="{{ url_for('index') }}">Sosotech</a></h1>
-                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i>Home</a>
-				<a href="{{ url_for('contact') }}">Contact</a>
-				<a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Profile</a>
-				<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
-			</div>
-		</nav>
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col">
-                    <h2 class="mb-4 text-center">{{ title }}</h2>
-                </div>
-            </div>
-        </div>
-		<div class="container">
-            <div class="row">
-                <div class="col">
-                    
+<!-- Navigation -->
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-custom navbar-dark fixed-top" style="background-color: black;">
+
+    <!-- Text Logo - Use this if you don't have a graphic logo -->
+    <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Corso</a> -->
+
+    <!-- Image Logo -->
+    <a style="text-decoration: none;" class="navbar-brand logo-image" href="{{ url_for('index') }}"><h3 style="color: orangered;">sosotech</h3></a> 
     
-    <!-- Contact -->
-  
-    <div id="contact" class="form-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="text-container">
-                        <h2>Contact Details</h2>
-                        <p>For registration questions please get in touch using the contact details below. For any questions use the form.</p>
-                        <h3>Main Office Location</h3>
-                        <ul class="list-unstyled li-space-lg">
-                            <li c lass="media">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div class="media-body">22 Innovative, San Francisco, CA 94043, US</div>
-                            </li>
-                            <li class="media">
-                                <i class="fas fa-mobile-alt"></i>
-                                <div class="media-body">+44 68 554 332, &nbsp;&nbsp;<i class="fas fa-mobile-alt"></i>&nbsp; +44 31 276 112</div>
-                            </li>
-                            <li class="media">
-                                <i class="fas fa-envelope"></i>
-                                <div class="media-body"><a class="light-gray" href="mailto:contact@zigo.com">contact@zigo.com</a> <i class="fas fa-globe"></i><a class="light-gray" href="#your-link">www.zigo.com</a></div>
-                            </li>
-                        </ul>
-                    </div> <!-- end of text-container -->
-                </div> <!-- end of col -->
-                <div class="col-lg-6">
+    <!-- Mobile Menu Toggle Button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-awesome fas fa-bars"></span>
+        <span class="navbar-toggler-awesome fas fa-times"></span>
+    </button>
+    <!-- end of mobile menu toggle button -->
 
-                    <!-- Contact Form -->
-                    <form id="contactForm" data-toggle="validator" data-focus="false">
-                        <div class="form-group">
-                            <input type="text" class="form-control-input" id="cname" required>
-                            <label class="label-control" for="cname">Name</label>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control-input" id="cemail" required>
-                            <label class="label-control" for="cemail">Email</label>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control-textarea" id="cmessage" required></textarea>
-                            <label class="label-control" for="cmessage">Your message</label>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group checkbox">
-                            <input type="checkbox" id="cterms" value="Agreed-to-Terms" required>I have read and agree to Corso's stated <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms Conditions</a> 
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="form-control-submit-button">SUBMIT</button>
-                        </div>
-                        <div class="form-message">
-                            <div id="cmsgSubmit" class="h3 text-center hidden"></div>
-                        </div>
-                    </form>
-                    <!-- end of contact form -->
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link page-scroll" href="{{ url_for('index') }}"><span class="navbar-toggler-awesome fas fa-home"></span> HOME <span class="sr-only">(current)</span></a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link page-scroll" href="#">DETAILS</a>
+            </li>
 
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </div> <!-- end of form-3 -->
-   
-    <!-- end of contact -->
+            -- Dropdown Menu --          
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle page-scroll" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">DATE</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href=""><span class="item-text">ARTICLE DETAILS</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href=""><span class="item-text">TERMS CONDITIONS</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href=""><span class="item-text">PRIVACY POLICY</span></a>
+                </div>
+            </li> -
+            -- end of dropdown menu -->
+
+            <li class="nav-item">
+                <a class="nav-link page-scroll" href="{{ url_for('contact') }}">CONTACT</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link page-scroll" href="{{ url_for('login') }}">ADMIN</a>
+            </li>
+        </ul>
+        <span class="nav-item social-icons">
+            <span class="fa-stack">
+                <a href="{{ url_for('logout') }}">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="{{ url_for('login') }}">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x"></i>
+                </a>
+            </span>
+        </span>
+    </div>
+</nav> <!-- end of navbar -->
+{% endblock %}
+<!-- end of navigation -->
+
+{% block header %}
+{% endblock %}
+
+{% block registration %}
+{% endblock %}
+
+{% block slider %}
+{% endblock %}
+
+{% block instruction %}
+{% endblock %}
+
+{% block students %}
+{% endblock %}
+
+{% block lightbox %}
+{% endblock %}
+
+{% block video %}
+{% endblock %}
+
+{% block testimonials %}
+{% endblock %}
+
+{% block date %}
+{% endblock %}
+
+<!-- Contact -->
+{% block contact %}  
+<div id="contact" class="form-3 mt-5">
+    <div class="container">
+            <div class="row mt-3 mb-5">
+                <div class="col">
+                    <h1 class="text-center">Contact Us</h1>
                 </div>
             </div>
-        </div>
-	</body>
-</html>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="text-container">
+                    <h2>Contact Details</h2>
+                    <p>For registration questions please get in touch using the contact details below. For any questions use the form.</p>
+                    <h3>Main Office Location</h3>
+                    <ul class="list-unstyled li-space-lg">
+                        <li c lass="media">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="media-body">22 Innovative, San Francisco, CA 94043, US</div>
+                        </li>
+                        <li class="media">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div class="media-body">+44 68 554 332, &nbsp;&nbsp;<i class="fas fa-mobile-alt"></i>&nbsp; +44 31 276 112</div>
+                        </li>
+                        <li class="media">
+                            <i class="fas fa-envelope"></i>
+                            <div class="media-body"><a class="light-gray" href="mailto:contact@zigo.com">contact@zigo.com</a> <i class="fas fa-globe"></i><a class="light-gray" href="#your-link">www.zigo.com</a></div>
+                        </li>
+                    </ul>
+                </div> <!-- end of text-container -->
+            </div> <!-- end of col -->
+            <div class="col-lg-6">
+
+                <!-- Contact Form -->
+                <form id="contactForm" data-toggle="validator" data-focus="false">
+                    <div class="form-group">
+                        <input type="text" class="form-control-input" id="cname" required>
+                        <label class="label-control" for="cname">Name</label>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control-input" id="cemail" required>
+                        <label class="label-control" for="cemail">Email</label>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control-textarea" id="cmessage" required></textarea>
+                        <label class="label-control" for="cmessage">Your message</label>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="cterms" value="Agreed-to-Terms" required>I have read and agree to Corso's stated <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms Conditions</a> 
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="form-control-submit-button">SUBMIT</button>
+                    </div>
+                    <div class="form-message">
+                        <div id="cmsgSubmit" class="h3 text-center hidden"></div>
+                    </div>
+                </form>
+                <!-- end of contact form -->
+
+            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div> <!-- end of container -->
+</div> <!-- end of form-3 -->
+{% endblock %}
+<!-- end of contact -->
