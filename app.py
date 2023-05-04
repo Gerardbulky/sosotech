@@ -7,17 +7,32 @@ from forms import UsersForm, LoginForm, RegisterForm
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user, UserMixin
 from datetime import datetime
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail, Message
+import smtplib
 
 if os.path.exists("env.py"):
     import env
 
 
 app = Flask(__name__)
+mail = Mail(app) # instantiate the mail class
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
 db = SQLAlchemy(app) 
 bcrypt = Bcrypt(app)
+
+# configuration of mail
+
+
+# app.config['MAIL_SERVER']= os.environ.get("MAIL_SERVER")
+# app.config['MAIL_PORT'] = os.environ.get("MAIL_PORT")
+# app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
+# app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+# app.config['MAIL_USE_TLS'] = os.environ.get("MAIL_USE_TLS")
+# app.config['MAIL_USE_SSL'] = os.environ.get("MAIL_USE_SSL")
+mail = Mail(app)
+
 
 
 login_manager = LoginManager()
@@ -50,8 +65,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(150), unique=False, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    phone = db.Column(db.String(150), unique= False)
+    phone = db.Column(db.String(150), unique= True)
+    address = db.Column(db.String(150), unique= False)
     city_country = db.Column(db.String(150), unique= False)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
         return '<User %r>' % self.fullname
@@ -64,19 +81,54 @@ with app.app_context():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    
     form = UsersForm()
-    if request.method == "POST":
-        fullname = form.fullname.data 
-        email = form.email.data 
-        phone = form.phone.data 
-        city_country = form.city_country.data 
+    if request.method == "POST" and form.validate_on_submit():
+        email_already_exist = User.query.filter_by(email = form.email.data).first()
+        phone_already_exist = User.query.filter_by(phone = form.phone.data).first()
 
-        users_info = User(fullname=fullname, email=email, phone=phone, city_country=city_country)
-        db.session.add(users_info)
-        db.session.commit()
-        flash("Thanks for registering and email has been sent to you.", 'success')
+        if email_already_exist or phone_already_exist:
+            flash('Email or Phone number already exits')
+            form = UsersForm()
+            return redirect(url_for('.index'))    
+        else:
+            fullname = form.fullname.data 
+            email = form.email.data 
+            phone = form.phone.data 
+            address = form.address.data 
+            city_country = form.city_country.data 
+            users_info = User(fullname=fullname, email=email, phone=phone,address=address, city_country=city_country)
+            db.session.add(users_info)
+            db.session.commit()
+
+    
+        message = (f"Hello {form.fullname.data.split(' ')[0]}! \n\n  This email is to confirm that, your application has been received successfully. "
+                        "Your information is as follows.  \n\n "
+                        "Full names: {} \n Email: {} \n Phone: {} \n Address: {} \n City and Country: {} \n\n"
+                        "If you have any questions, you can send us an email from the contact page. \n"
+                        "Thanks for your application and for believing in us! "
+                        "\n\n Best regards,  \n\n"
+                        "SosoTechnology. ").format(form.fullname.data, form.email.data, form.phone.data, form.address.data, form.city_country.data) 
+        # Encode the message string to UTF-8 encoding format
+        message = message.encode('utf-8')
+        server = smtplib.SMTP(os.environ.get("MAIL_SERVER"), os.environ.get("MAIL_PORT"))
+        server.starttls()
+        server.login(os.environ.get("MAIL_USERNAME"),os.environ.get("MAIL_PASSWORD"))
+        server.sendmail(os.environ.get("MAIL_USERNAME"), email, message)
+        
+        session['name'] = form.fullname.data 
+        email = '' 
+        phone = ''
+        address = ''
+        city_country = ''
+        flash(f"Thanks {session['name'].split(' ')[0]} for registering and email has been sent to you.", 'success')
         return redirect('/')
     return render_template("index.html", form=form)
+
+
+@app.route('/contact/')
+def contact():
+    return render_template("contact.html")
 
 
 
@@ -87,6 +139,7 @@ def register():
     if request.method == 'POST' and form.validate_on_submit():
         email = Register.query.filter_by(email=form.email.data).first()  # We search the database if the email exits
         if email:
+            flash('Email already exist')
             form = RegisterForm()
         else:
             hash_password = bcrypt.generate_password_hash(form.password.data)
@@ -131,8 +184,8 @@ def logout():
 @app.route('/profile/', methods=["GET", "POST"])
 @login_required
 def profile():
-	return render_template("profile.html", title="profile Page")
-
+    all_users = User.query.order_by(User.date_created).all()
+    return render_template("profile.html", all_users=all_users, title="All Registered Users")
 
 
 if __name__ == "__main__":

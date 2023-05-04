@@ -8,6 +8,7 @@ class UsersForm(FlaskForm):
     fullname = StringField('Full names ', [validators.DataRequired()])
     email = StringField('Email address ', [validators.Email(), validators.DataRequired(),Email("This field requires a valid email address"),Length(max=120)])
     phone = StringField('Phone number ', [validators.DataRequired()])
+    address = StringField('Address ', [validators.DataRequired()])
     city_country = StringField('City & Country ', [validators.DataRequired()])
     submit = SubmitField('Submit')
 
