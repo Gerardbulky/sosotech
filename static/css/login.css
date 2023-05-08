@@ -58,10 +58,9 @@ body {
 .login form input[type="password"], .login form input[type="text"], .login form input[type="email"], .register form input[type="password"], .register form input[type="text"], .register form input[type="email"] {
     width: 250px;
     height: 38px;
-    border: 1px solid #dee0e4;
+    border: 1px solid #00040c;
     margin-bottom: 20px;
     padding: 0px;
-    z-index: 1;
     margin-left: -20px;
     
 }
@@ -148,3 +147,49 @@ body.loggedin {
   padding: 5px;
   margin: 0 0 10px 0;
 }
+
+/* My changes */
+.danger {
+    color: red;
+    text-align: center;
+}
+
+.success {
+    color: green;
+    text-align: center;
+}
+
+/* Collapsible section */
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+  
+  
+  
+  .collapsible:after {
+    content: '\002B';
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+  
+  .active:after {
+    content: "\2212";
+  }
+  
+  .content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+  }

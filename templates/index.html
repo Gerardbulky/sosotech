@@ -27,7 +27,7 @@
     <link href="{{ url_for('static', filename='css/swiper.css') }}" rel="stylesheet">
 	<link href="{{ url_for('static', filename='css/magnific-popup.css') }}" rel="stylesheet">
 	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
-
+    {% block link %}{% endblock %}
 	
 	<!-- Favicon  -->
     <link rel="icon" href="{{ url_for('static', filename='images/sosotech_official_logo.jpg') }}">
@@ -46,6 +46,7 @@
     
 
     <!-- Navigation -->
+    {% block navigation %}
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
 
         <!-- Text Logo - Use this if you don't have a graphic logo -->
@@ -84,18 +85,22 @@
                 -- end of dropdown menu -->
 
                 <li class="nav-item">
-                    <a class="nav-link page-scroll" href="#">CONTACT</a>
+                    <a class="nav-link page-scroll" href="{{ url_for('contact') }}">CONTACT</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{{ url_for('login') }}">ADMIN</a>
                 </li>
             </ul>
             <span class="nav-item social-icons">
                 <span class="fa-stack">
-                    <a href="#">
+                    <a href="{{ url_for('logout') }}">
                         <i class="fas fa-circle fa-stack-2x"></i>
                         <i class="fab fa-facebook-f fa-stack-1x"></i>
                     </a>
                 </span>
                 <span class="fa-stack">
-                    <a href="#">
+                    <a href="{{ url_for('login') }}">
                         <i class="fas fa-circle fa-stack-2x"></i>
                         <i class="fab fa-twitter fa-stack-1x"></i>
                     </a>
@@ -103,29 +108,31 @@
             </span>
         </div>
     </nav> <!-- end of navbar -->
+    {% endblock %}
     <!-- end of navigation -->
     
 
     <!-- Header -->
+    {% block header %}
     <header id="header" class="header">
         <div class="container">
             <div class="row">
+                <!----Flash messages------>
+                {% block message %}
+                <div>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class=flashes>
+                        {% for message in messages %}
+                        <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% endblock %}
+                <!----end of flash messages---->
                 <div class="col-lg-12">
-                    <!----Flash messages------>
-                    {% block message %}
-                    <div>
-                        {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            <div class=flashes>
-                            {% for message in messages %}
-                            <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
-                            {% endfor %}
-                            </div>
-                        {% endif %}
-                        {% endwith %}
-                    </div>
-                    {% endblock %}
-                    <!----end of flash messages---->
                     <div class="text-container">
                         <div class="countdown">
                             <span id="clock"></span>
@@ -177,10 +184,12 @@
         <!-- end of image slider -->
 
     </header> <!-- end of header -->
+    {% endblock %}
     <!-- end of header -->
 
 
     <!-- Registration -->
+    {% block registration %}
     <div id="register" class="form-1">
         <div class="container">
             <div class="row">
@@ -209,12 +218,12 @@
                     <!-- Registration Form -->
                     <div class="form-container">
                         {% from '_formhelpers.html' import render_field %}
-                        {% include '_messages.html' %}
                         <form id="registerForm" action="{{url_for('index')}}" method="post">
                             {{ form.csrf_token }}
                             {{ render_field(form.fullname, class="form-control")}}
                             {{ render_field(form.phone, class="form-control")}}
                             {{ render_field(form.email, class="form-control")}}
+                            {{ render_field(form.address, class="form-control")}}
                             {{ render_field(form.city_country, class="form-control")}}
                             <div class="form-group checkbox">
                                 <input type="checkbox" required>I've read and agree to Corso's written <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms & Conditions</a>
@@ -230,10 +239,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of form-1 -->
+    {% endblock %}
     <!-- end of registration -->
 
 
     <!-- Partners -->
+    {% block slider %}
     <div class="slider-1">
         <div class="container">
             <div class="row">
@@ -280,10 +291,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of slider-1 -->
+    {% endblock %}
     <!-- end of partners -->
 
 
     <!-- Instructor -->
+    {% block instruction %}
     <div id="instructor" class="basic-1">
         <div class="container">
             <div class="row">
@@ -300,6 +313,7 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-1 -->
+    {% endblock %}
     <!-- end of instructor -->
 
 
@@ -307,6 +321,7 @@
 
 
     <!-- Students -->
+    {% block students %}
     <div class="basic-3">
         <div class="container">
             <div class="row">
@@ -323,10 +338,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-3 -->
+    {% endblock %}
     <!-- end of students -->
 
 
     <!-- Details Lightbox -->
+    {% block lightbox %}
 	<div id="details-lightbox" class="lightbox-basic zoom-anim-dialog mfp-hide">
         <div class="container">
             <div class="row">
@@ -366,10 +383,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of lightbox-basic -->
+    {% endblock %}
     <!-- end of details lightbox -->
 
 
     <!-- Video -->
+    {% block video %}
     <div class="basic-4">
         <div class="container">
             <div class="row">
@@ -393,10 +412,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-4 -->
+    {% endblock %}
     <!-- end of video -->
 
 
     <!-- Testimonials -->
+    {% block testimonials %}
     <div class="slider-2">
         <div class="container">
             <div class="row">
@@ -471,10 +492,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of slider-2 -->
+    {% endblock %}
     <!-- end of testimonials -->
 
 
     <!-- Date -->
+    {% block date %}
     <div id="date" class="basic-5 mb-5">
         <div class="container">
             <div class="row">
@@ -488,74 +511,16 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of basic-5 -->
+    {% endblock %}
     <!-- end of date -->
 
-
-    <!-- Contact -->
-    <div id="contact" class="form-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="text-container">
-                        <h2>Contact Details</h2>
-                        <p>For registration questions please get in touch using the contact details below. For any questions use the form.</p>
-                        <h3>Main Office Location</h3>
-                        <ul class="list-unstyled li-space-lg">
-                            <li c lass="media">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div class="media-body">22 Innovative, San Francisco, CA 94043, US</div>
-                            </li>
-                            <li class="media">
-                                <i class="fas fa-mobile-alt"></i>
-                                <div class="media-body">+44 68 554 332, &nbsp;&nbsp;<i class="fas fa-mobile-alt"></i>&nbsp; +44 31 276 112</div>
-                            </li>
-                            <li class="media">
-                                <i class="fas fa-envelope"></i>
-                                <div class="media-body"><a class="light-gray" href="mailto:contact@zigo.com">contact@zigo.com</a> <i class="fas fa-globe"></i><a class="light-gray" href="#your-link">www.zigo.com</a></div>
-                            </li>
-                        </ul>
-                    </div> <!-- end of text-container -->
-                </div> <!-- end of col -->
-                <div class="col-lg-6">
-
-                    <!-- Contact Form -->
-                    <form id="contactForm" data-toggle="validator" data-focus="false">
-                        <div class="form-group">
-                            <input type="text" class="form-control-input" id="cname" required>
-                            <label class="label-control" for="cname">Name</label>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control-input" id="cemail" required>
-                            <label class="label-control" for="cemail">Email</label>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control-textarea" id="cmessage" required></textarea>
-                            <label class="label-control" for="cmessage">Your message</label>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group checkbox">
-                            <input type="checkbox" id="cterms" value="Agreed-to-Terms" required>I have read and agree to Corso's stated <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms Conditions</a> 
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="form-control-submit-button">SUBMIT</button>
-                        </div>
-                        <div class="form-message">
-                            <div id="cmsgSubmit" class="h3 text-center hidden"></div>
-                        </div>
-                    </form>
-                    <!-- end of contact form -->
-
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </div> <!-- end of form-3 -->
+    <!-- contact -->
+    {% block contact %}
+    {% endblock %}
     <!-- end of contact -->
 
-
     <!-- Footer -->
+    {% block footer %}
     <div class="footer">
         <div class="container">
             <div class="row">
@@ -630,10 +595,12 @@
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of footer -->  
+    {% endblock %}
     <!-- end of footer -->
 
 
     <!-- Copyright -->
+    {% block copyright %}
     <div class="copyright">
         <div class="container">
             <div class="row">
@@ -643,11 +610,15 @@
                 </div> <!-- end of col -->
             </div> <!-- enf of row -->
         </div> <!-- end of container -->
-    </div> <!-- end of copyright --> 
+    </div> <!-- end of copyright -->
+    {% endblock %} 
     <!-- end of copyright -->
     
     	
     <!-- Scripts -->
+    {% block script %}{% endblock %}
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
     <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script> <!-- Popper tooltip library for Bootstrap -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> <!-- Bootstrap framework -->

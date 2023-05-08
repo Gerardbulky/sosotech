@@ -10,7 +10,7 @@
         {% block context %}
 		<div class="login">
 			<h1>Login</h1>
-			<div class="links">
+			<div class="links" style="margin-bottom: 20px;">
 				<a href="{{ url_for('login') }}" class="active">Login</a>
 				<a href="{{ url_for('register') }}">Register</a>
 			</div>
@@ -18,9 +18,9 @@
             {% include '_messages.html' %}
             <form method="POST">
                 {{form.csrf_token}}
-                <div class="row" style="margin-top: 40px;">
+                <div class="row" style="margin-top: 20px;">
                     <div class="col my-3" style="display: inline-flex;">
-                        <i class="fa fa-envelope" aria-hidden="true" style="font-size: xx-large; max-width: 20%; margin-right: -2;"></i>
+                        <i class="fa fa-envelope" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
                         <label for="email" style="width: 80%; float: left; padding-left: 0px;  gap: 0px 0px;">
                             {{ render_field(form.email) }}
                         </label>
@@ -28,8 +28,8 @@
                 </div>
                 <div class="row">
                     <div class="col my-3" style="display: inline-flex;">
-                        <i class="fa fa-lock" aria-hidden="true" style="font-size: xx-large; max-width: 20%; margin-right: -2;"></i>
-                        <label for="email" style="width: 80%; float: left;  gap: 0px 0px;">
+                        <i class="fa fa-lock" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
+                        <label for="password" style="width: 80%; float: left;  gap: 0px 0px;">
                             {{ render_field(form.password) }}
                         </label>
                     </div>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+        {% block link %}
+        <script src="{{ url_for('static', filename='js/collapsible.js') }}"></script>
+        {% endblock %}
+        
+	</head>
+	<body class="loggedin">
+		<nav class="navtop">
+			<div>
+				<h1><a style="font-size: x-large;" href="{{ url_for('index') }}">Sosotech</a></h1>
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i>Home</a>
+				<a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Profile</a>
+				<a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+			</div>
+		</nav>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col">
+                    <h2 class="mb-4 text-center">{{ title }}</h2>
+                </div>
+            </div>
+        </div>
+		<div class="container">
+            {% for user in all_users %}
+            <div class="row">
+                <div class="col">
+                    {% if user %}
+                    <button class="collapsible">Name: {{user.fullname}}</button>
+                    <div class="content">
+                        <br>
+                        Email: {{user.email}}
+                        <br>
+                        Phone: {{user.phone}}
+                        <br>
+                        Address: {{user.address}}
+                        <br>
+                        City & country: {{user.city_country}}
+                        <br>
+                        <br>
+                    </div>
+                    <hr>
+                    {% else %}
+                        <p class="text-center">There are no registered users</p>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+	</body>
+</html>

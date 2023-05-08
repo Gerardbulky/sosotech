@@ -8,18 +8,23 @@ class UsersForm(FlaskForm):
     fullname = StringField('Full names ', [validators.DataRequired()])
     email = StringField('Email address ', [validators.Email(), validators.DataRequired(),Email("This field requires a valid email address"),Length(max=120)])
     phone = StringField('Phone number ', [validators.DataRequired()])
+    address = StringField('Address ', [validators.DataRequired()])
     city_country = StringField('City & Country ', [validators.DataRequired()])
     submit = SubmitField('Submit')
 
 
 class RegisterForm(FlaskForm):
     email = StringField('', [validators.Email(), validators.DataRequired()])
-    password = PasswordField('', [validators.DataRequired(), validators.EqualTo('confirm', message=' Both password must match! ')])
-    confirm = PasswordField('', [validators.DataRequired()])
-    submit = SubmitField('Submit')
+    password = PasswordField('', [validators.DataRequired(), validators.EqualTo('confirms', message=' Both password must match! ')])
+    confirms = PasswordField('', [validators.DataRequired()])
 
 
 class LoginForm(FlaskForm):
     email = StringField('', [validators.Email(), validators.DataRequired()])
     password = PasswordField('', [validators.DataRequired()])
-    submit = SubmitField('Submit')
+
+
+class ContactForm(FlaskForm):
+    name = StringField('', [validators.DataRequired()])
+    email = StringField('', [validators.Email(), validators.DataRequired(),Email("This field requires a valid email address"),Length(max=120)])
+    messages = TextAreaField('', [validators.DataRequired()])
