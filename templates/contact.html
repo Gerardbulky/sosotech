@@ -1,5 +1,8 @@
 {% extends 'index.html' %}
 
+{% block link %}
+{% endblock %}
+
 <!-- Navigation -->
 {% block navigation %}
 <nav class="navbar navbar-expand-lg navbar-custom navbar-dark fixed-top" style="background-color: black;">
@@ -66,6 +69,7 @@
 {% endblock %}
 <!-- end of navigation -->
 
+
 {% block header %}
 {% endblock %}
 
@@ -96,6 +100,19 @@
 <!-- Contact -->
 {% block contact %}  
 <div id="contact" class="form-3 mt-5">
+    <!----Flash messages------>
+<div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class=flashes>
+        {% for message in messages %}
+        <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+</div>
+<!----end of flash messages---->
     <div class="container">
             <div class="row mt-3 mb-5">
                 <div class="col">
@@ -127,33 +144,21 @@
             <div class="col-lg-6">
 
                 <!-- Contact Form -->
-                <form id="contactForm" data-toggle="validator" data-focus="false">
-                    <div class="form-group">
-                        <input type="text" class="form-control-input" id="cname" required>
-                        <label class="label-control" for="cname">Name</label>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control-input" id="cemail" required>
-                        <label class="label-control" for="cemail">Email</label>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control-textarea" id="cmessage" required></textarea>
-                        <label class="label-control" for="cmessage">Your message</label>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group checkbox">
-                        <input type="checkbox" id="cterms" value="Agreed-to-Terms" required>I have read and agree to Corso's stated <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms Conditions</a> 
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="form-control-submit-button">SUBMIT</button>
-                    </div>
-                    <div class="form-message">
-                        <div id="cmsgSubmit" class="h3 text-center hidden"></div>
-                    </div>
-                </form>
+                <div class="form-container">
+                    {% from '_formhelpers.html' import render_field %}
+                    <form action="{{ url_for('contact') }}" method="POST">
+                        {{ form.csrf_token }}
+                        {{ render_field(form.name, class="form-control", placeholder="Name", id="name")}}
+                        {{ render_field(form.email, class="form-control", placeholder="Email", id="email")}}
+                        {{ render_field(form.messages, class="form-control", placeholder="Message", id="messages", style='height: 100px;')}}
+                        <div class="form-group checkbox">
+                            <input type="checkbox" required>I've read and agree to Corso's written <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms & Conditions</a>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <button class="btn btn-info w-100">Submit</button>
+                        
+                    </form>
+                </div> <!-- end of form-container -->
                 <!-- end of contact form -->
 
             </div> <!-- end of col -->
@@ -162,3 +167,36 @@
 </div> <!-- end of form-3 -->
 {% endblock %}
 <!-- end of contact -->
+
+{% block script %}
+<!-- Include the EmailJS library -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+<script type="text/javascript">
+    // Add an event listener to the form submission
+    document.querySelector('form').addEventListener('submit', function(event) {
+        // Get the values from the form fields
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var messages = document.getElementById('messages').value;
+
+        // Send the email using EmailJS
+        emailjs.send('gmail', 'Sosotech', {
+            from_name: name,
+            from_email: email,
+            from_messages: messages
+        }, '6hBKUU6AaZsir5LFX')
+
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            // TODO: Add code to display a success message to the user
+
+        }, function(error) {
+            console.log('FAILED...', error);
+            // TODO: Add code to display an error message to the user
+        });
+    });
+</script>
+
+{% endblock %}
+

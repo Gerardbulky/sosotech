@@ -22,3 +22,9 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('', [validators.Email(), validators.DataRequired()])
     password = PasswordField('', [validators.DataRequired()])
+
+
+class ContactForm(FlaskForm):
+    name = StringField('', [validators.DataRequired()])
+    email = StringField('', [validators.Email(), validators.DataRequired(),Email("This field requires a valid email address"),Length(max=120)])
+    messages = TextAreaField('', [validators.DataRequired()])

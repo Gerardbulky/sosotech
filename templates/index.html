@@ -27,7 +27,7 @@
     <link href="{{ url_for('static', filename='css/swiper.css') }}" rel="stylesheet">
 	<link href="{{ url_for('static', filename='css/magnific-popup.css') }}" rel="stylesheet">
 	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
-
+    {% block link %}{% endblock %}
 	
 	<!-- Favicon  -->
     <link rel="icon" href="{{ url_for('static', filename='images/sosotech_official_logo.jpg') }}">
@@ -117,22 +117,22 @@
     <header id="header" class="header">
         <div class="container">
             <div class="row">
+                <!----Flash messages------>
+                {% block message %}
+                <div>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class=flashes>
+                        {% for message in messages %}
+                        <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% endblock %}
+                <!----end of flash messages---->
                 <div class="col-lg-12">
-                    <!----Flash messages------>
-                    {% block message %}
-                    <div>
-                        {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            <div class=flashes>
-                            {% for message in messages %}
-                            <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
-                            {% endfor %}
-                            </div>
-                        {% endif %}
-                        {% endwith %}
-                    </div>
-                    {% endblock %}
-                    <!----end of flash messages---->
                     <div class="text-container">
                         <div class="countdown">
                             <span id="clock"></span>
@@ -616,6 +616,9 @@
     
     	
     <!-- Scripts -->
+    {% block script %}{% endblock %}
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
     <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script> <!-- Popper tooltip library for Bootstrap -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> <!-- Bootstrap framework -->
@@ -626,7 +629,5 @@
     <script src="{{ url_for('static', filename='js/validator.min.js') }}"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script> <!-- Custom scripts -->
     <script src="{{ url_for('static', filename='js/countdown.js') }}"></script> <!-- Countdown scripts -->
-    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script> <!-- Countdown scripts -->
-    
 </body>
 </html>
