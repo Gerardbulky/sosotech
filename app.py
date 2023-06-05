@@ -19,12 +19,13 @@ mail = Mail(app) # instantiate the mail class
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
+
 db = SQLAlchemy(app) 
 bcrypt = Bcrypt(app)
 mail = Mail(app)
 
 # initialize the app with the extension
-db.init_app(app)
+# db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -199,6 +200,7 @@ def logout():
 def profile():
     all_users = User.query.order_by(User.date_created).all()
     return render_template("profile.html", all_users=all_users, title="All Registered Users")
+
 
 
 if __name__ == "__main__":
