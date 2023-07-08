@@ -1,0 +1,202 @@
+{% extends 'index.html' %}
+
+{% block link %}
+{% endblock %}
+
+<!-- Navigation -->
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-custom navbar-dark fixed-top" style="background-color: black;">
+
+    <!-- Text Logo - Use this if you don't have a graphic logo -->
+    <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Corso</a> -->
+
+    <!-- Image Logo -->
+    <a style="text-decoration: none;" class="navbar-brand logo-image" href="{{ url_for('index') }}"><h3 style="color: orangered;">sosotech</h3></a> 
+    
+    <!-- Mobile Menu Toggle Button -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-awesome fas fa-bars"></span>
+        <span class="navbar-toggler-awesome fas fa-times"></span>
+    </button>
+    <!-- end of mobile menu toggle button -->
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link page-scroll" href="{{ url_for('index') }}"><span class="navbar-toggler-awesome fas fa-home"></span> HOME <span class="sr-only">(current)</span></a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link page-scroll" href="#">DETAILS</a>
+            </li>
+
+            -- Dropdown Menu --          
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle page-scroll" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">DATE</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href=""><span class="item-text">ARTICLE DETAILS</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href=""><span class="item-text">TERMS CONDITIONS</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href=""><span class="item-text">PRIVACY POLICY</span></a>
+                </div>
+            </li> -
+            -- end of dropdown menu -->
+
+            <li class="nav-item">
+                <a class="nav-link page-scroll" href="{{ url_for('contact') }}">CONTACT</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link page-scroll" href="{{ url_for('login') }}">ADMIN</a>
+            </li>
+        </ul>
+        <span class="nav-item social-icons">
+            <span class="fa-stack">
+                <a href="{{ url_for('logout') }}">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="{{ url_for('login') }}">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x"></i>
+                </a>
+            </span>
+        </span>
+    </div>
+</nav> <!-- end of navbar -->
+{% endblock %}
+<!-- end of navigation -->
+
+
+{% block header %}
+{% endblock %}
+
+{% block registration %}
+{% endblock %}
+
+{% block slider %}
+{% endblock %}
+
+{% block instruction %}
+{% endblock %}
+
+{% block students %}
+{% endblock %}
+
+{% block lightbox %}
+{% endblock %}
+
+{% block video %}
+{% endblock %}
+
+{% block testimonials %}
+{% endblock %}
+
+{% block date %}
+{% endblock %}
+
+<!-- Contact -->
+{% block contact %}  
+<div id="contact" class="form-3 mt-5">
+    <!----Flash messages------>
+<div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class=flashes>
+        {% for message in messages %}
+        <p class="alert-success py-1" style="text-align: center; padding-top: 10px; padding-bottom: 10px;">{{ message }}</p>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+</div>
+<!----end of flash messages---->
+    <div class="container">
+            <div class="row mt-3 mb-5">
+                <div class="col">
+                    <h1 class="text-center">Contact Us</h1>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="text-container">
+                    <h2>Contact Details</h2>
+                    <p>For registration questions please get in touch using the contact details below. For any questions use the form.</p>
+                    <h3>Main Office Location</h3>
+                    <ul class="list-unstyled li-space-lg">
+                        <li c lass="media">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="media-body">22 Innovative, San Francisco, CA 94043, US</div>
+                        </li>
+                        <li class="media">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div class="media-body">+44 68 554 332, &nbsp;&nbsp;<i class="fas fa-mobile-alt"></i>&nbsp; +44 31 276 112</div>
+                        </li>
+                        <li class="media">
+                            <i class="fas fa-envelope"></i>
+                            <div class="media-body"><a class="light-gray" href="mailto:contact@zigo.com">contact@zigo.com</a> <i class="fas fa-globe"></i><a class="light-gray" href="#your-link">www.zigo.com</a></div>
+                        </li>
+                    </ul>
+                </div> <!-- end of text-container -->
+            </div> <!-- end of col -->
+            <div class="col-lg-6">
+
+                <!-- Contact Form -->
+                <div class="form-container">
+                    {% from '_formhelpers.html' import render_field %}
+                    <form action="{{ url_for('contact') }}" method="POST">
+                        {{ form.csrf_token }}
+                        {{ render_field(form.name, class="form-control", placeholder="Name", id="name")}}
+                        {{ render_field(form.email, class="form-control", placeholder="Email", id="email")}}
+                        {{ render_field(form.messages, class="form-control", placeholder="Message", id="messages", style='height: 100px;')}}
+                        <div class="form-group checkbox">
+                            <input type="checkbox" required>I've read and agree to Corso's written <a href="privacy-policy.html">Privacy Policy</a> and <a href="terms-conditions.html">Terms & Conditions</a>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <button class="btn btn-info w-100">Submit</button>
+                        
+                    </form>
+                </div> <!-- end of form-container -->
+                <!-- end of contact form -->
+
+            </div> <!-- end of col -->
+        </div> <!-- end of row -->
+    </div> <!-- end of container -->
+</div> <!-- end of form-3 -->
+{% endblock %}
+<!-- end of contact -->
+
+{% block script %}
+<!-- Include the EmailJS library -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+<script type="text/javascript">
+    // Add an event listener to the form submission
+    document.querySelector('form').addEventListener('submit', function(event) {
+        // Get the values from the form fields
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var messages = document.getElementById('messages').value;
+
+        // Send the email using EmailJS
+        emailjs.send('gmail', 'Sosotech', {
+            from_name: name,
+            from_email: email,
+            from_messages: messages
+        }, '6hBKUU6AaZsir5LFX')
+
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            // TODO: Add code to display a success message to the user
+
+        }, function(error) {
+            console.log('FAILED...', error);
+            // TODO: Add code to display an error message to the user
+        });
+    });
+</script>
+
+{% endblock %}
+

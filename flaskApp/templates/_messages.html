@@ -1,0 +1,5 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div style="padding-top: 5px; padding-bottom: 5px; background-color: rgb(230, 245, 245); text-align: center;" class="{{ category }}">{{ message }}</div>
+  {% endfor %}
+{% endwith %}

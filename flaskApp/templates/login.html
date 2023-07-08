@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Login</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	</head>
+	<body>
+        {% block context %}
+		<div class="login">
+			<h1>Login</h1>
+			<div class="links" style="margin-bottom: 20px;">
+				<a href="{{ url_for('login') }}" class="active">Login</a>
+				<a href="{{ url_for('register') }}">Register</a>
+			</div>
+            {% from "_formhelpers.html" import render_field %}
+            {% include '_messages.html' %}
+            <form method="POST">
+                {{form.csrf_token}}
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col my-3" style="display: inline-flex;">
+                        <i class="fa fa-envelope" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
+                        <label for="email" style="width: 80%; float: left; padding-left: 0px;  gap: 0px 0px;">
+                            {{ render_field(form.email) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col my-3" style="display: inline-flex;">
+                        <i class="fa fa-lock" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
+                        <label for="password" style="width: 80%; float: left;  gap: 0px 0px;">
+                            {{ render_field(form.password) }}
+                        </label>
+                    </div>
+                </div>
+                <input type="submit" value="Login" class="btn btn-info">
+            </form>
+		</div>
+        {% endblock %}
+	</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Register</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	</head>
+	<body>
+		<div class="register">
+			<h1>Register</h1>
+			<div class="links">
+				<a href="{{ url_for('login') }}">Login</a>
+				<a href="{{ url_for('register') }}" class="active">Register</a>
+			</div>
+            {% from "_formhelpers.html" import render_field %}
+            {% include '_messages.html' %}
+			<form method="POST">
+                {{form.csrf_token}}
+                <div class="row" style="margin-top: 40px;">
+                    <div class="col my-3" style="display: inline-flex;">
+                        <i class="fa fa-envelope" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
+                        <label for="email" name="email" style="width: 80%;">
+                            {{ render_field(form.email) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col my-3" style="display: inline-flex;">
+                        <i class="fa fa-lock" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
+                        <label for="password" name="password" style="width: 80%;">
+                            {{ render_field(form.password) }}
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col my-3" style="display: inline-flex;">
+                        <i class="fa fa-lock" aria-hidden="true" style="font-size: xx-large; max-width: 20%;"></i>
+                        <label for="password" name="confirms" style="width: 80%;">
+                            {{ render_field(form.confirms) }}
+                        </label>
+                    </div>
+                </div>
+                <input type="submit" value="Register" class="btn btn-info">
+            </form>
+		</div>
+	</body>
+</html>
