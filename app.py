@@ -24,7 +24,6 @@ bcrypt = Bcrypt(app)
 mail = Mail(app)
 
 # initialize the app with the extension
-db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
