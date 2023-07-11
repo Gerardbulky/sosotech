@@ -5,8 +5,8 @@
 name: CI-CD-Pipeline-to-AWS-ElasticBeanstalk
 env:
   EB_PACKAGE_S3_BUCKET_NAME : "gitactionbucket"
-  EB_APPLICATION_NAME       : "Gitactions-elasticbeanstalk"
-  EB_ENVIRONMENT_NAME       : "Gitactions-elasticbeanstalk-env-1"
+  EB_APPLICATION_NAME       : "git-action-elastic-beanstalk"
+  EB_ENVIRONMENT_NAME       : "git-action-elastic-beanstalk-env"
   DEPLOY_PACKAGE_NAME       : "sosotech-${{ github.sha }}.zip"
   AWS_REGION_NAME           : "eu-north-1"
 
