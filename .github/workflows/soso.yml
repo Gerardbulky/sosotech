@@ -53,5 +53,4 @@ jobs:
         region: 'eu-north-1'
         application_name: 'git-ation-app'
         environment_name: 'git-ation-app-env'
-        version_labels: 'v1.0.0'
 
