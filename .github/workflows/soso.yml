@@ -53,3 +53,5 @@ jobs:
         region: 'eu-north-1'
         application_name: 'git-action-elastic-beanstalk'
         environment_name: 'git-action-elastic-beanstalk-env'
+        version_labels: 'v1.0.0'
+
