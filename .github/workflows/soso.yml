@@ -48,8 +48,8 @@ jobs:
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v19
       with:
-        aws_access_key: ${{ secrets.MY_AWS_ACCESS_KEY }}
-        aws_secret_key: ${{ secrets.MY_AWS_SECRET_KEY }}
+        aws_access_key: ${{ secrets.Maws_access_key }}
+        aws_secret_key: ${{ secrets.aws_secret_key }}
         region: 'eu-north-1'
         application_name: 'git-action-elastic-beanstalk'
         environment_name: 'git-action-elastic-beanstalk-env'
