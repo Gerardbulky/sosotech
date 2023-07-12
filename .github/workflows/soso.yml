@@ -51,7 +51,7 @@ jobs:
         aws_access_key: ${{ secrets.aws_access_key }}
         aws_secret_key: ${{ secrets.aws_secret_key }}
         region: 'eu-north-1'
-        application_name: 'git-action-elastic-beanstalk'
-        environment_name: 'git-action-elastic-beanstalk-env'
+        application_name: 'git-ation-app'
+        environment_name: 'git-ation-app-env'
         version_labels: 'v1.0.0'
 
