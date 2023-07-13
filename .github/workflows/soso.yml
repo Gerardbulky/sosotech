@@ -27,17 +27,24 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Run tests
+      run: pytest
+
     - name: Create deployment package
       run: |
-        zip -r deployment-package.zip ./* -x '*.git*'
+        mkdir deployment
+        cp -r * deployment/
+        cd deployment/
+        pip install -r requirements.txt -t .
+        zip -r deployment.zip .
 
-    - name: Copy deployment package to S3 bucket
-      uses: aws-actions/aws-cli@v2
+    - name: Copy deployment package to S3
+      uses: actions/aws/cli@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: 'eu-north-1'
-        command: s3 cp deployment-package.zip s3://sosotech-bucket/deployment-package.zip
+        command: 's3 cp deployment/deployment.zip s3://sosotech-bucket/deployment.zip'
 
   deploy:
     needs: build
@@ -57,17 +64,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Download deployment package from S3 bucket
-      uses: aws-actions/aws-cli@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: 'eu-north-1'
-        command: s3 cp s3://sosotech-bucket/deployment-package.zip deployment-package.zip
-
-    - name: Unzip deployment package
-      run: unzip deployment-package.zip -d .
-
     - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v19
       with:
@@ -76,6 +72,6 @@ jobs:
         region: 'eu-north-1'
         application_name: 'git-ation-app'
         environment_name: 'git-ation-app-env'
-        version_label: 'v1'
+
 
 
