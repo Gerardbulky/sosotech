@@ -34,12 +34,12 @@ jobs:
         source venv/bin/activate
         
         mkdir deployment
-        rsync -av --exclude='deployment' ./ deployment/
-        cd deployment/
+        rsync -av --exclude='deployment' ./ /deployment
+        cd /deployment
         pip install -r requirements.txt -t .
         
         # Package your application
-        cp -r app templates static deployment/
+        cp -r app templates static /deployment
         cd deployment
         
         zip -r deployment.zip .
