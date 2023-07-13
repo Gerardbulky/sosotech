@@ -71,7 +71,7 @@ jobs:
         region: 'eu-north-1'
         application_name: 'git-ation-app'
         environment_name: 'git-ation-app-env'
-        version_label: ${{ formatTime(now(), 'yyyyMMddHHmmss') }}
+        version_label: ${{ github.sha }}
 
 
 
