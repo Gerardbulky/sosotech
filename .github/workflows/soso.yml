@@ -34,7 +34,6 @@ jobs:
         source venv/bin/activate
         
         mkdir deployment
-        rsync -av --exclude='deployment' ./ /deployment
         cd /deployment
         pip install -r requirements.txt -t .
         
