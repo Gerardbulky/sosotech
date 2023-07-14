@@ -1,86 +1,65 @@
 #---------------------------------------------------------------------
 # GitHub Action Workflow to Deploy Flask App to AWS ElasticBeanstalk
 #---------------------------------------------------------------------
+name: CI-CD-Pipeline-to-AWS-ElasticBeanstalk
+env:
+  EB_PACKAGE_S3_BUCKET_NAME : "sosotech-bucket"
+  EB_APPLICATION_NAME       : "git-ation-app"
+  EB_ENVIRONMENT_NAME       : "git-ation-app-env"
+  DEPLOY_PACKAGE_NAME       : "sosotech-app-${{ github.sha }}.zip"
+  AWS_REGION_NAME           : "eu-north-1"
 
-name: CI/CD Pipeline
-
-on:
+on: 
   push:
-    branches:
+    branches: 
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    my_ci_pipeline:
+       runs-on: ubuntu-latest
+       
+       steps:
+         - name: Git clone our repository
+           uses: actions/checkout@v1
+            
+         - name: Create ZIP deployment package
+           run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./  -x  *.git*
+           
+         - name: Configure my AWS Credentils
+           uses: aws-actions/configure-aws-credentials@v1
+           with:
+             aws-access-key-id    : ${{ secrets.MY_AWS_ACCESS_KEY }}
+             aws-secret-access-key: ${{ secrets.MY_AWS_SECRET_KEY }}
+             aws-region           : ${{ env.AWS_REGION_NAME }}
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+         - name: Copy our Deployment package to S3 bucket
+           run : aws s3 cp ${{ env.DEPLOY_PACKAGE_NAME }} s3://${{ env.EB_PACKAGE_S3_BUCKET_NAME}}/
+         
+         - name: Print nice message on completion of CI Pipeline
+           run : echo "CI Pipeline part finished successfully"
+           
+    my_cd_pipeline:
+       runs-on: ubuntu-latest
+       needs: [my_ci_pipeline]
+       
+       steps:
+         - name: Configure my AWS Credentils
+           uses: aws-actions/configure-aws-credentials@v1
+           with:
+             aws-access-key-id    : ${{ secrets.MY_AWS_ACCESS_KEY }}
+             aws-secret-access-key: ${{ secrets.MY_AWS_SECRET_KEY }}
+             aws-region           : ${{ env.AWS_REGION_NAME }}
+         
+         - name: Create new ElasticBeanstalk Applicaiton Version
+           run : |
+            aws elasticbeanstalk create-application-version \
+            --application-name ${{ env.EB_APPLICATION_NAME }} \
+            --source-bundle S3Bucket="${{ env.EB_PACKAGE_S3_BUCKET_NAME }}",S3Key="${{ env.DEPLOY_PACKAGE_NAME }}" \
+            --version-label "Ver-${{ github.sha }}" \
+            --description "CommitSHA-${{ github.sha }}"
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Create deployment package
-      run: |
-        
-        python -m venv venv
-        source venv/bin/activate
-        
-        mkdir deployment
-        cd /deployment
-        pip install -r requirements.txt -t .
-        
-        # Package your application
-        cp -r app templates static /deployment
-        cd deployment
-        
-        zip -r deployment.zip .
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: 'eu-north-1'
-
-    - name: Copy deployment package to S3
-      run: aws s3 cp deployment/deployment.zip s3://sosotech-bucket/deployment.zip
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Deploy to AWS Elastic Beanstalk
-      uses: einaregilsson/beanstalk-deploy@v19
-      with:
-        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-        aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-        region: 'eu-north-1'
-        application_name: 'git-ation-app'
-        environment_name: 'git-ation-app-env'
-        version_label: ${{ github.sha }}
-
-
-
-
+         - name: Deploy our new Application Version
+           run : aws elasticbeanstalk update-environment --environment-name ${{ env.EB_ENVIRONMENT_NAME }} --version-label "Ver-${{ github.sha }}"
+           
+         - name: Print nice message on completion of CD Pipeline
+           run : echo "CD Pipeline part finished successfully" 
